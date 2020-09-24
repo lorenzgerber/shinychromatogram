@@ -21,7 +21,7 @@ mod_spectra_server <- function(input, output, session, r){
   ns <- session$ns
   output$spectra <- renderPlot({
     if(!is.null(r$clicker_x))({
-      barplot(r$chromatogram[round(r$clicker_x, 0),,1])
+      barplot(r$spectra[round(r$clicker_x, 0),,1])
     })
   })
 

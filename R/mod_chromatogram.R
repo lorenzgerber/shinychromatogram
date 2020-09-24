@@ -12,8 +12,14 @@ mod_chromatogram_ui <- function(id){
 
   click_options <- clickOpts(id = ns('clicker'), clip = TRUE)
 
+  brush_options <- brushOpts(id = ns('super_brush'), fill = "#9cf", stroke = "#036", opacity = 0.25,
+                             delay = 300, delayType = "throttle", clip = TRUE,
+                             direction = "x", resetOnNew = TRUE)
+
+  double_click_options <- dblclickOpts(id = ns('double_clicker'), clip = TRUE, delay = 400)
+
   tagList(
-    plotOutput(outputId = ns("chromatogram"), click = click_options) %>% shinycssloaders::withSpinner(color="#0dc5c1")
+    plotOutput(outputId = ns("chromatogram"), click = click_options, brush = brush_options, dblclick = double_click_options ) %>% shinycssloaders::withSpinner(color="#0dc5c1")
   )
 }
 
@@ -22,14 +28,28 @@ mod_chromatogram_ui <- function(id){
 #' @noRd
 mod_chromatogram_server <- function(input, output, session, r){
   ns <- session$ns
+  r$tic <- NULL
+  r$left_edge <- NULL
+  r$right_edge <- NULL
 
   observeEvent( input$clicker , {
     r$clicker_x <- input$clicker$x
   })
 
+  observeEvent( input$super_brush, {
+    r$left_edge <- round(input$super_brush$xmin,0)
+    r$right_edge <- round(input$super_brush$xmax, 0)
+  })
+
+  observeEvent( input$double_clicker, {
+    r$tic <- data.frame(signal = chromatogram::calculate_tic(r$raw)[r$left_edge:r$right_edge], scan_number = as.numeric(rownames(r$raw[r$left_edge:r$right_edge,,1])))
+  })
+
   output$chromatogram <- renderPlot({
-    plot_data <- data.frame(signal = chromatogram::calculate_tic(r$chromatogram), scan_number = as.numeric(rownames(r$chromatogram)))
-    ggplot2::ggplot(data = plot_data, ggplot2::aes(x = scan_number, y = signal)) + ggplot2::geom_line()
+    if(is.null(r$tic)){
+      r$tic <- data.frame(signal = chromatogram::calculate_tic(r$raw), scan_number = as.numeric(rownames(r$raw)))
+    }
+    ggplot2::ggplot(data = r$tic, ggplot2::aes(x = scan_number, y = signal)) + ggplot2::geom_line()
   })
 
 }
