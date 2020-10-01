@@ -21,8 +21,8 @@ mod_save_chromatogram_server <- function(input, output, session, r){
   ns <- session$ns
 
   observeEvent(input$save_chromatogram, {
-    browser()
     save_to_file(input, session, r)
+    shinyalert::shinyalert("Done", "Chromatogram Segment Saved to Files.", type = "success")
   })
 
 }
