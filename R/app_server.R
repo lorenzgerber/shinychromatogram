@@ -20,5 +20,7 @@ app_server <- function( input, output, session ) {
   # List the first level callModules here
   callModule(mod_chromatogram_server, "chromatogram_ui_1", r)
   callModule(mod_spectra_server, "spectra_ui_1", r)
+  callModule(mod_zoom_control_server, "zoom_control_ui_1", r)
+  callModule(mod_save_chromatogram_server, "save_chromatogram_ui_1", r)
 
 }
