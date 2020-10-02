@@ -37,8 +37,20 @@ mod_chromatogram_server <- function(input, output, session, r){
   })
 
   observeEvent( input$super_brush, {
-    r$left_edge <- round(input$super_brush$xmin,0)
-    r$right_edge <- round(input$super_brush$xmax, 0)
+    upper <- dim(r$raw)[1]
+    left <- round(input$super_brush$xmin,0)
+    right <- round(input$super_brush$xmax, 0)
+    if ( left < 1 )
+      r$left_edge <- 1
+    else
+      r$left_edge <- left
+
+    if ( right > upper)
+      r$right_edge <- upper
+    else
+      r$right_edge <- right
+    #r$left_edge <- round(input$super_brush$xmin,0)
+    #r$right_edge <- round(input$super_brush$xmax, 0)
   })
 
   observeEvent( input$double_clicker, {

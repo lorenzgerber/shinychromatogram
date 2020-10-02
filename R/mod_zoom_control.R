@@ -10,7 +10,9 @@
 mod_zoom_control_ui <- function(id){
   ns <- NS(id)
   tagList(
-    actionButton(ns("reset_zoom"), "Reset Zoom")
+    actionButton(ns("reset_zoom"), "Reset Zoom"),
+    textInput(ns("left_edge"), "Left Edge"),
+    textInput(ns("right_edge"), "Right Edge")
   )
 }
 
@@ -19,6 +21,14 @@ mod_zoom_control_ui <- function(id){
 #' @noRd
 mod_zoom_control_server <- function(input, output, session, r){
   ns <- session$ns
+
+  observeEvent(r$left_edge, {
+    updateTextInput(session, "left_edge", value = isolate(r$left_edge))
+  })
+
+  observeEvent(r$right_edge, {
+    updateTextInput(session, "right_edge", value = isolate(r$right_edge))
+  })
 
   observeEvent(input$reset_zoom, {
     r$tic <- NULL
