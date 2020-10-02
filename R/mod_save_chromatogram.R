@@ -10,6 +10,7 @@
 mod_save_chromatogram_ui <- function(id){
   ns <- NS(id)
   tagList(
+    shinyalert::useShinyalert(),
     actionButton(ns("save_chromatogram"), "Save Chromatogram Segment")
   )
 }
@@ -22,7 +23,7 @@ mod_save_chromatogram_server <- function(input, output, session, r){
 
   observeEvent(input$save_chromatogram, {
     save_to_file(input, session, r)
-    shinyalert::shinyalert("Done", "Chromatogram Segment Saved to Files.", type = "success")
+    shinyalert::shinyalert("Done", "Chromatogram Segment written to RData file.", type = "success")
   })
 
 }
