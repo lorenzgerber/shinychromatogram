@@ -36,25 +36,26 @@ mod_chromatogram_server <- function(input, output, session, r){
     r$clicker_x <- input$clicker$x
   })
 
-  observeEvent( input$super_brush, {
-    upper <- dim(r$raw)[1]
-    left <- round(input$super_brush$xmin,0)
-    right <- round(input$super_brush$xmax, 0)
-    if ( left < 1 )
-      r$left_edge <- 1
-    else
-      r$left_edge <- left
-
-    if ( right > upper)
-      r$right_edge <- upper
-    else
-      r$right_edge <- right
-    #r$left_edge <- round(input$super_brush$xmin,0)
-    #r$right_edge <- round(input$super_brush$xmax, 0)
-  })
-
   observeEvent( input$double_clicker, {
-    r$tic <- data.frame(signal = chromatogram::calculate_tic(r$raw)[r$left_edge:r$right_edge], scan_number = as.numeric(rownames(r$raw[r$left_edge:r$right_edge,,1])))
+
+    if(!is.null(input$super_brush$xmin)){
+      upper <- dim(r$raw)[1]
+      left <- round(input$super_brush$xmin,0)
+      right <- round(input$super_brush$xmax, 0)
+      if ( left < 1 )
+        r$left_edge <- 1
+      else
+        r$left_edge <- left
+
+      if ( right > upper)
+        r$right_edge <- upper
+      else
+        r$right_edge <- right
+
+      r$tic <- data.frame(signal = chromatogram::calculate_tic(r$raw)[r$left_edge:r$right_edge], scan_number = as.numeric(rownames(r$raw[r$left_edge:r$right_edge,,1])))
+    }
+
+
   })
 
   output$chromatogram <- renderPlot({
@@ -62,6 +63,7 @@ mod_chromatogram_server <- function(input, output, session, r){
       r$tic <- data.frame(signal = chromatogram::calculate_tic(r$raw), scan_number = as.numeric(rownames(r$raw)))
     }
     ggplot2::ggplot(data = r$tic, ggplot2::aes(x = scan_number, y = signal)) + ggplot2::geom_line()
+
   })
 
 }
