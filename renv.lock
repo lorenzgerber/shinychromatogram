@@ -107,6 +107,18 @@
       "Repository": "CRAN",
       "Hash": "b7d7f1e926dfcd57c74ce93f5c048e80"
     },
+    "chromatogram": {
+      "Package": "chromatogram",
+      "Version": "0.1.0",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "chromatogram",
+      "RemoteUsername": "lorenzgerber",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "a8b61050f1fb761e8e9dffb5738d113e2c64e364",
+      "Hash": "b5af4f1e8e8b0bd8127f2bb8f14dc545"
+    },
     "cli": {
       "Package": "cli",
       "Version": "2.1.0",
